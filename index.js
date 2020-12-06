@@ -17,7 +17,7 @@ const urls = [
     'https://www.jimms.fi/fi/Product/Show/165447/zt-a30800f-10p/zotac-geforce-rtx-3080-amp-holo-naytonohjain-10gb-gddr6x',
     'https://www.jimms.fi/fi/Product/Show/166700/geforce-rtx-3080-suprim-x-10g/msi-geforce-rtx-3080-suprim-x-naytonohjain-10gb-gddr6x',
     'https://www.jimms.fi/fi/Product/Show/165456/gv-n3080vision-oc-10gd/gigabyte-geforce-rtx-3080-vision-oc-naytonohjain-10gb-gddr6x',
-'https://www.verkkokauppa.com/fi/product/47599/qbgdj/EVGA-GeForce-RTX-3080-XC3-BLACK-GAMING-naytonohjain-PCI-e-va?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
+'https://www.verkkokauppa.cm/fi/product/47599/qbgdj/EVGA-GeForce-RTX-3080-XC3-BLACK-GAMING-naytonohjain-PCI-e-va?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
 'https://www.verkkokauppa.com/fi/product/8725/qbggg/EVGA-GeForce-RTX-3080-XC3-ULTRA-GAMING-naytonohjain-PCI-e-va?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
 'https://www.verkkokauppa.com/fi/product/31239/qbggk/EVGA-GeForce-RTX-3080-FTW3-ULTRA-GAMING-naytonohjain-PCI-e-v?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
 'https://www.verkkokauppa.com/fi/product/5227/qbggq/EVGA-GeForce-RTX-3080-FTW3-GAMING-naytonohjain-PCI-e-vaylaan?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
@@ -58,7 +58,7 @@ const check = async(url) => {
                     console.log(chalk.red("OUT OF STOCK"));
                 }
 
-            })
+            }).catch(error => console.log(error));
     }
     else if(url.includes("jimms.fi")){
         await axios
@@ -85,8 +85,10 @@ const check = async(url) => {
                     console.log(chalk.red("OUT OF STOCK"));
                 }
 
-            })
+            }).catch(error => console.log(error));
+
     }
+
 
 
 

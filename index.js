@@ -17,7 +17,7 @@ const urls = [
     'https://www.jimms.fi/fi/Product/Show/165447/zt-a30800f-10p/zotac-geforce-rtx-3080-amp-holo-naytonohjain-10gb-gddr6x',
     'https://www.jimms.fi/fi/Product/Show/166700/geforce-rtx-3080-suprim-x-10g/msi-geforce-rtx-3080-suprim-x-naytonohjain-10gb-gddr6x',
     'https://www.jimms.fi/fi/Product/Show/165456/gv-n3080vision-oc-10gd/gigabyte-geforce-rtx-3080-vision-oc-naytonohjain-10gb-gddr6x',
-'https://www.verkkokauppa.cm/fi/product/47599/qbgdj/EVGA-GeForce-RTX-3080-XC3-BLACK-GAMING-naytonohjain-PCI-e-va?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
+'https://www.verkkokauppa.com/fi/product/47599/qbgdj/EVGA-GeForce-RTX-3080-XC3-BLACK-GAMING-naytonohjain-PCI-e-va?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
 'https://www.verkkokauppa.com/fi/product/8725/qbggg/EVGA-GeForce-RTX-3080-XC3-ULTRA-GAMING-naytonohjain-PCI-e-va?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
 'https://www.verkkokauppa.com/fi/product/31239/qbggk/EVGA-GeForce-RTX-3080-FTW3-ULTRA-GAMING-naytonohjain-PCI-e-v?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
 'https://www.verkkokauppa.com/fi/product/5227/qbggq/EVGA-GeForce-RTX-3080-FTW3-GAMING-naytonohjain-PCI-e-vaylaan?list=OZCYkRqBfusq290jq2N0wq2hNJq2hXnq2hBaq2NN3q2hkOqubW8qwXbgqcp3NqaaByB',
@@ -31,67 +31,57 @@ const urls = [
 'https://www.verkkokauppa.com/fi/product/2928/nxgnb/Asus-TUF-RTX3080-O10G-GAMING-naytonohjain-PCI-e-vaylaan?list=OZCYkRqaaXDqcH3cqurYbq4nVDq2h0gb',
 'https://www.verkkokauppa.com/fi/product/60767/qdsst/Asus-TUF-RTX3080-10G-GAMING-naytonohjain-PCI-e-vaylaan?list=OZCYkRqaaXDqcH3cqurYbq4nVDq2h0gb'];
 
-
 const check = async(url) => {
-    if(url.includes("verkkokauppa.com")) {
         await axios
             .get(url)
             .then(res => {
-                let $ = cheerio.load(res.data);
-                const title = $('#main > section > header > h1 > span').text();
-                const price = $('#main > section > aside > div.lt2tbg-0.glCDxh > div:nth-child(1) > div.price-tag > div > div > div').text().replace(/\s+/g, "").replace(",", ".");
-                const stock = $('#main > section > aside > div.lt2tbg-0.glCDxh > div:nth-child(2) > div.shipment-details > div.shipment-details-available-for-delivery.block.block--flex > i').attr("class");
-                console.log("Verkkokauppa.com: " + title);
-                if (displayPrice && maxprice >= Number(price)) {
-                    console.log(chalk.green(price + "€"));
-                } else if(displayPrice){
-                    console.log(chalk.red(price + "€"));
-                }
-                if (stock === 'status status--green') {
-                    console.log(chalk.green("on stock"))
-                    if (maxprice >= price) {
-                        console.log(chalk.green(price + "€!!!"));
-                    } else {
-                        console.log(chalk.red(price + "€ EXCEEDS MAX PRICE"));
+                if (url.includes("verkkokauppa.com")) {
+                    let $ = cheerio.load(res.data);
+                    const title = $('#main > section > header > h1 > span').text();
+                    const price = $('#main > section > aside > div.lt2tbg-0.glCDxh > div:nth-child(1) > div.price-tag > div > div > div').text().replace(/\s+/g, "").replace(",", ".");
+                    const stock = $('#main > section > aside > div.lt2tbg-0.glCDxh > div:nth-child(2) > div.shipment-details > div.shipment-details-available-for-delivery.block.block--flex > i').attr("class");
+                    console.log("Verkkokauppa.com: " + title);
+                    if (displayPrice && maxprice >= Number(price)) {
+                        console.log(chalk.green(price + "€"));
+                    } else if (displayPrice) {
+                        console.log(chalk.red(price + "€"));
                     }
-                } else {
-                    console.log(chalk.red("OUT OF STOCK"));
-                }
-
-            }).catch(error => console.log(error));
-    }
-    else if(url.includes("jimms.fi")){
-        await axios
-            .get(url)
-            .then(res => {
-                let $ = cheerio.load(res.data);
-                const title = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.nameinfo > h1 > span:nth-child(2)').text();
-                const price = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.row > div.col-xs-6.col-md-5.priceinfo > div.price > span > span > span:nth-child(1)').text().replace(/\s+/g, "").replace(",", ".");
-                const stock = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.row > div.col-xs-6.col-md-7.deliveryinfo > div > div:nth-child(2) > div.whqty').text();
-                console.log("Jimm's: " +title);
-                if (displayPrice && maxprice >= Number(price)) {
-                    console.log(chalk.green(price + "€"));
-                } else if(displayPrice){
-                    console.log(chalk.red(price + "€"));
-                }
-                if (stock !== "0 kpl") {
-                    console.log(chalk.green("on stock"))
-                    if (maxprice >= price) {
-                        console.log(chalk.green(price + "€!!!"));
+                    if (stock === 'status status--green') {
+                        console.log(chalk.green("on stock"))
+                        if (maxprice >= price) {
+                            console.log(chalk.green(price + "€!!!"));
+                        } else {
+                            console.log(chalk.red(price + "€ EXCEEDS MAX PRICE"));
+                        }
                     } else {
-                        console.log(chalk.red(price + "€ EXCEEDS MAX PRICE"));
+                        console.log(chalk.red("OUT OF STOCK"));
                     }
-                } else {
-                    console.log(chalk.red("OUT OF STOCK"));
+                } else if (url.includes("jimms.fi")) {
+                    let $ = cheerio.load(res.data);
+                    const title = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.nameinfo > h1 > span:nth-child(2)').text();
+                    const price = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.row > div.col-xs-6.col-md-5.priceinfo > div.price > span > span > span:nth-child(1)').text().replace(/\s+/g, "").replace(",", ".");
+                    const stock = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.row > div.col-xs-6.col-md-7.deliveryinfo > div > div:nth-child(2) > div.whqty').text();
+                    console.log("Jimm's: " + title);
+                    if (displayPrice && maxprice >= Number(price)) {
+                        console.log(chalk.green(price + "€"));
+                    } else if (displayPrice) {
+                        console.log(chalk.red(price + "€"));
+                    }
+                    if (stock !== "0 kpl") {
+                        console.log(chalk.green("on stock"))
+                        if (maxprice >= price) {
+                            console.log(chalk.green(price + "€!!!"));
+                        } else {
+                            console.log(chalk.red(price + "€ EXCEEDS MAX PRICE"));
+                        }
+                    } else {
+                        console.log(chalk.red("OUT OF STOCK"));
+                    }
+
+
                 }
-
-            }).catch(error => console.log(error));
-
-    }
-
-
-
-
+            })
+            .catch(error => console.log(error));
 }
 
 const start = async() => {

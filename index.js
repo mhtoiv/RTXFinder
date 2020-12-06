@@ -84,7 +84,7 @@ const check = async(url) => {
             .catch(error => console.log(error));
 }
 
-const start = async() => {
+const startSearch = async() => {
     for (let i = 0; i < urls.length; i++) {
         await check(urls[i])
         await new Promise(resolve => setTimeout(resolve, 0));
@@ -92,5 +92,5 @@ const start = async() => {
     }
 }
 
-start().then(res => console.log("Checkup completed!"));
+startSearch().then(() => console.log("Checkup completed!"));
 

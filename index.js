@@ -49,7 +49,6 @@ const check = async(url) => {
 const startSearch = async() => {
     for (let i = 0; i < urls.length; i++) {
         await check(urls[i])
-        await new Promise(resolve => setTimeout(resolve, 0));
 
     }
 }

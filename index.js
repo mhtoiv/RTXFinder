@@ -2,7 +2,7 @@ const cheerio = require("cheerio");
 const axios = require('axios');
 const chalk = require("chalk");
 
-const maxprice = process.argv[2];
+const maxprice = Number(process.argv[2]);
 const displayPrice = process.argv[3] === 'y';
 
 const urls = [
@@ -35,19 +35,19 @@ const check = async(url) => {
         await axios
             .get(url)
             .then(res => {
+                let $ = cheerio.load(res.data);
                 if (url.includes("verkkokauppa.com")) {
-                    let $ = cheerio.load(res.data);
-                    const title = $('#main > section > header > h1 > span').text();
-                    const price = $('#main > section > aside > div.lt2tbg-0.glCDxh > div:nth-child(1) > div.price-tag > div > div > div').text().replace(/\s+/g, "").replace(",", ".");
-                    const stock = $('#main > section > aside > div.lt2tbg-0.glCDxh > div:nth-child(2) > div.shipment-details > div.shipment-details-available-for-delivery.block.block--flex > i').attr("class");
+                    const title = $('.product-header-title').text();
+                    const price = $('.price-tag-content__price-tag-price--current').text().replace(/\s+/g, "").replace(",", ".");
+                    const stock = $('.status') === 'status-green';
                     console.log("Verkkokauppa.com: " + title);
                     if (displayPrice && maxprice >= Number(price)) {
                         console.log(chalk.green(price + "€"));
                     } else if (displayPrice) {
                         console.log(chalk.red(price + "€"));
                     }
-                    if (stock === 'status status--green') {
-                        console.log(chalk.green("on stock"))
+                    if (stock) {
+                        console.log(chalk.green("ON STOCK!!!"))
                         if (maxprice >= price) {
                             console.log(chalk.green(price + "€!!!"));
                         } else {
@@ -57,18 +57,18 @@ const check = async(url) => {
                         console.log(chalk.red("OUT OF STOCK"));
                     }
                 } else if (url.includes("jimms.fi")) {
-                    let $ = cheerio.load(res.data);
-                    const title = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.nameinfo > h1 > span:nth-child(2)').text();
-                    const price = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.row > div.col-xs-6.col-md-5.priceinfo > div.price > span > span > span:nth-child(1)').text().replace(/\s+/g, "").replace(",", ".");
-                    const stock = $('#productinfo > div.contentbox > div > div.col-sm-7.col-md-8.productinfo > div.row > div.col-xs-6.col-md-7.deliveryinfo > div > div:nth-child(2) > div.whqty').text();
+                    const title = $('.name:nth-child(1)').text();
+                    const price = $('.pricetext>span').text().replace(/\s+/g, "").replace(",", ".").replace("€", "");
+                    const stock = $('.whrow:nth-child(2)>.whqty').text() !== '0 kpl';
                     console.log("Jimm's: " + title);
                     if (displayPrice && maxprice >= Number(price)) {
                         console.log(chalk.green(price + "€"));
                     } else if (displayPrice) {
                         console.log(chalk.red(price + "€"));
                     }
-                    if (stock !== "0 kpl") {
-                        console.log(chalk.green("on stock"))
+                    if (stock) {
+                        console.log(chalk.green("ON STOCK!!!"))
+                        console.log("price: " + price + " maxprice: " + maxprice)
                         if (maxprice >= price) {
                             console.log(chalk.green(price + "€!!!"));
                         } else {

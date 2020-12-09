@@ -19,13 +19,14 @@ const check = async(url) => {
                 if (url.includes("verkkokauppa.com")) {
                     title = $('.product-header-title').text();
                     price = $('.price-tag-content__price-tag-price--current').text().replace(/\s+/g, "").replace(",", ".");
-                    stock = $('.status') === 'status-green';
+                    stock = $('.status').attr('class') === 'status status--green';
                     console.log("Verkkokauppa.com: " + title);
                 } else if (url.includes("jimms.fi")) {
                     title = $('.name:nth-child(1)').text();
                     price = $('.pricetext>span').text().replace(/\s+/g, "").replace(",", ".").replace("€", "");
-                    stock = $('.whrow:nth-child(2)>.whqty').text() !== '0 kpl';
+                    stock = !$('.deliverytime').text().includes("Ei vahvistettu")
                     console.log("Jimm's: " + title);
+
                 }
                 if (displayPrice && maxprice >= Number(price)) {
                     console.log(chalk.green(price + "€"));
